@@ -1,0 +1,47 @@
+.item1 {
+    grid-area: item1;
+
+}
+.item2 { grid-area: item2; }
+.item3 { grid-area: item3; }
+.item4 { grid-area: main; }
+body{
+    margin: 0;
+    padding: 0;
+}
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+  }
+  .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 20px 60px;
+    text-decoration: none;
+    font-size: 20px;
+  }
+
+
+.grid-container {
+    position: absolute;
+    display: grid;
+    height: 90%;
+    width: 100%;
+    grid-template-areas:
+      'item1 item2 item3'
+      'main main main';
+    margin: 0px;
+  }
+  .grid-container > div {
+    background-color: rgba(0, 0, 0, 0.1);
+    text-align: left;
+    padding: 30px;
+    margin: 20px;
+    font-size: 30px;
+  }
+.balanceContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}

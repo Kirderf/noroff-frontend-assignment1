@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="topnav"><a>Tech shop</a></div>
+    <div class="grid-container">
+        <div class="item1">
+            <p><h3>Joe Banker</h3></p>
+            <div class="balanceContainer">
+                <p>Balance</p><p id="Balance">0</p><p>kr</p>
+            </div>
+            <p>
+                <button onclick="getLoan()">Get a loan</button>
+            </p>
+        </div>
+        <div class="item2">
+            <p><h3>Work</h3></p>
+            <p><div class="balanceContainer">
+                <p>Pay</p><p id="Pay">0</p><p>kr</p>
+            </div></p>
+            <p>
+                <button onclick="putBank()" >Bank</button>
+                <button onclick="doWork()">Work</button>
+            </p>
+        </div>
+        <div class="item3">
+            
+            <div><h3>Laptops</h3></div>
+            
+            <select name="Laptops" id="laptops"> 
+                <option value="rigatoni">Rigatoni</option> 
+                <option value="dave">Dave</option> 
+                <option value="pumpernickel">Pumpernickel</option> 
+                <option value="reeses">Reeses</option> 
+            </select>
+          
+        </div>
+        <div class="item4">Intol Celetroon E10</div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
