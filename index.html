@@ -1,47 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
-    <div class="topnav"><a>Tech shop</a></div>
-    <div class="grid-container">
-        <div class="item1">
-            <p><h3>Joe Banker</h3></p>
-            <div class="balanceContainer">
-                <p>Balance</p><p id="Balance">0</p><p>kr</p>
-            </div>
-            <p>
-                <button onclick="getLoan()">Get a loan</button>
-            </p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bank & Laptop Store</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>Tech Shop</h1>
+    </nav>
+    <div class="container">
+      <div id="bank-container" class="content-container">
+        <h1>Bank</h1>
+        <p>Balance: <span id="bank-balance">0</span> kr</p>
+        <p id="outstanding-loan-box">Outstanding Loan: <span id="outstanding-loan">0</span> kr</p>
+        <button id="get-loan">Get a Loan</button>
+        <button id="repay-loan" style="display: none">Repay Loan</button>
+      </div>
+
+      <div id="work-container" class="content-container">
+        <h1>Work</h1>
+        <p>Pay: <span id="pay">0</span> kr</p>
+        <div class="button-row">
+        <button id="bank-button">Bank</button>
+        <button id="work-button">Work</button>
         </div>
-        <div class="item2">
-            <p><h3>Work</h3></p>
-            <p><div class="balanceContainer">
-                <p>Pay</p><p id="Pay">0</p><p>kr</p>
-            </div></p>
-            <p>
-                <button onclick="putBank()" >Bank</button>
-                <button onclick="doWork()">Work</button>
-            </p>
+      </div>
+
+      <div id="laptop-select-container" class="content-container">
+        <h1>Laptops</h1>
+        <select id="laptop-select"></select>
+        <h2>Features:</h2>
+        <ul id="laptop-specs"></ul>
+      </div>
+      <div id="laptop-description-box">
+        <div id="laptop-info">
+          <img src="" alt="" id="laptop-image" />
+          <h2 id="laptop-title"></h2>
+          <p id="laptop-description"></p>
+          <h1><span id="laptop-price"></span> NOK</h1>
+          <button id="buy-now">Buy Now</button>
+          <p id="purchase-message"></p>
         </div>
-        <div class="item3">
-            
-            <div><h3>Laptops</h3></div>
-            
-            <select name="Laptops" id="laptops"> 
-                <option value="rigatoni">Rigatoni</option> 
-                <option value="dave">Dave</option> 
-                <option value="pumpernickel">Pumpernickel</option> 
-                <option value="reeses">Reeses</option> 
-            </select>
-          
-        </div>
-        <div class="item4">Intol Celetroon E10</div>
+      </div>
     </div>
-    <script src="index.js"></script>
-</body>
+
+    <script>
+      const bankBalance = document.getElementById("bank-balance");
+      const outstandingLoan = document.getElementById("outstanding-loan");
+      const outstandingLoanBox = document.getElementById("outstanding-loan-box");
+      const getLoanButton = document.getElementById("get-loan");
+      const repayLoanButton = document.getElementById("repay-loan");
+      const payAmount = document.getElementById("pay");
+      const bankButton = document.getElementById("bank-button");
+      const workButton = document.getElementById("work-button");
+      const laptopSelect = document.getElementById("laptop-select");
+      const laptopImage = document.getElementById("laptop-image");
+      const laptopTitle = document.getElementById("laptop-title");
+      const laptopDescription = document.getElementById("laptop-description");
+      const laptopPrice = document.getElementById("laptop-price");
+      const buyNowButton = document.getElementById("buy-now");
+      const purchaseMessage = document.getElementById("purchase-message");
+      const laptopSpecs = document.getElementById("laptop-specs");
+
+      let bankBalanceValue = 0;
+      let loanAmount = 0;
+      let payValue = 0;
+      let selectedLaptop = null;
+      let laptopData = null;
+
+      // Populate laptop selection dropdown using API
+      fetch("https://hickory-quilled-actress.glitch.me/computers")
+        .then((response) => response.json())
+        .then((data) => {
+          laptopData = data;
+          data.forEach((computer) => {
+            const option = document.createElement("option");
+            option.value = computer.id;
+            option.text = computer.title;
+            laptopSelect.appendChild(option);
+          });
+          // Trigger the change event to initially populate laptop info
+          laptopSelect.dispatchEvent(new Event("change"));
+        });
+
+      // Update laptop info when selection changes
+      laptopSelect.addEventListener("change", () => {
+        const selectedId = parseInt(laptopSelect.value);
+        selectedLaptop = laptopData.find(
+          (computer) => computer.id === selectedId
+        );
+        if (selectedLaptop) {
+          laptopImage.src = selectedLaptop.image;
+          laptopTitle.textContent = selectedLaptop.title;
+          laptopDescription.textContent = selectedLaptop.description;
+          laptopPrice.textContent = selectedLaptop.price;
+          purchaseMessage.textContent = "";
+
+          // Clear the existing specs
+          laptopSpecs.innerHTML = "";
+
+          // Loop through the specs and create list items
+          selectedLaptop.specs.forEach((spec) => {
+            const specItem = document.createElement("li");
+            specItem.textContent = spec;
+            laptopSpecs.appendChild(specItem);
+          });
+        }
+      });
+      // Get a loan
+      getLoanButton.addEventListener("click", () => {
+        if (loanAmount > 0) {
+          alert("You already have a loan!");
+        } else if (bankBalanceValue <= 0) {
+          alert("You have no money to get a loan!");
+        } else {
+          const loan = parseInt(prompt("How much would you like to loan?"));
+          if (loan > bankBalanceValue * 2) {
+            alert("You cannot loan more than double of your bank balance!");
+          } else {
+            bankBalanceValue += loan;
+            loanAmount = loan;
+            bankBalance.textContent = bankBalanceValue;
+            outstandingLoan.textContent = loanAmount;
+            outstandingLoanBox.style.display = "inline-block";
+            getLoanButton.style.display = "none";
+            repayLoanButton.style.display = "inline-block";
+          }
+        }
+      });
+      // Repay loan
+      repayLoanButton.addEventListener("click", () => {
+        if (loanAmount <= 0) {
+          alert("You do not have any loan to repay!");
+        } else {
+          const repayment = parseInt(
+            prompt("How much would you like to repay?")
+          );
+          if (repayment > payValue) {
+            alert("You do not have enough money to repay that much!");
+          } else {
+            loanAmount -= repayment;
+            payValue -= repayment;
+            bankBalanceValue -= repayment;
+            if (loanAmount === 0) {
+              repayLoanButton.style.display = "none";
+              getLoanButton.style.display = "inline-block";
+              outstandingLoanBox.style.display = "none";
+            }
+            bankBalance.textContent = bankBalanceValue;
+            outstandingLoan.textContent = loanAmount;
+            payAmount.textContent = payValue;
+          }
+        }
+      });
+      // Bank money
+      bankButton.addEventListener("click", () => {
+        if (payValue <= 0) {
+          alert("You do not have any money to bank!");
+        } else {
+          if (loanAmount > 0) {
+            const loanRepayment = Math.ceil(payValue * 0.1);
+            loanAmount -= loanRepayment;
+            payValue -= loanRepayment;
+            outstandingLoan.textContent = loanAmount;
+          }
+          bankBalanceValue += payValue;
+          payValue = 0;
+          bankBalance.textContent = bankBalanceValue;
+          payAmount.textContent = payValue;
+        }
+      });
+      // Work for money
+      workButton.addEventListener("click", () => {
+        payValue += 100;
+        payAmount.textContent = payValue;
+      });
+
+      // Buy the selected laptop
+      buyNowButton.addEventListener("click", () => {
+        if (selectedLaptop) {
+          if (bankBalanceValue < selectedLaptop.price) {
+            alert("You do not have enough money to buy this laptop!");
+          } else {
+            bankBalanceValue -= selectedLaptop.price;
+            bankBalance.textContent = bankBalanceValue;
+            purchaseMessage.textContent =
+              "You have successfully purchased a " + selectedLaptop.title + "!";
+          }
+        } else {
+          alert("Please select a laptop to buy!");
+        }
+      });
+    </script>
+  </body>
 </html>
