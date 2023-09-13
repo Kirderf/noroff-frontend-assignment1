@@ -140,10 +140,11 @@
           );
           if (repayment > payValue) {
             alert("You do not have enough money to repay that much!");
+          }else if(repayment > loanAmount){
+            alert("You cannot repay more than your outstanding loan!");
           } else {
             loanAmount -= repayment;
             payValue -= repayment;
-            bankBalanceValue -= repayment;
             if (loanAmount === 0) {
               repayLoanButton.style.display = "none";
               getLoanButton.style.display = "inline-block";
