@@ -117,7 +117,11 @@
           alert("You have no money to get a loan!");
         } else {
           const loan = parseInt(prompt("How much would you like to loan?"));
-          if (loan > bankBalanceValue * 2) {
+          if (isNaN(loan)) {
+            alert("You must enter a number!");
+          } else if (loan <= 0) {
+            alert("You cannot loan a negative amount!");
+          } else if (loan > bankBalanceValue * 2) {
             alert("You cannot loan more than double of your bank balance!");
           } else {
             bankBalanceValue += loan;
@@ -138,7 +142,11 @@
           const repayment = parseInt(
             prompt("How much would you like to repay?")
           );
-          if (repayment > payValue) {
+          if (isNaN(repayment)) {
+            alert("You must enter a number!");
+          }else if(repayment <= 0){
+            alert("You cannot repay a negative amount!");
+          }else if (repayment > payValue) {
             alert("You do not have enough money to repay that much!");
           }else if(repayment > loanAmount){
             alert("You cannot repay more than your outstanding loan!");
